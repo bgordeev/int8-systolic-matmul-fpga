@@ -1,0 +1,17 @@
+// B_matrix.hex: 4x4, row-major, 8-bit two's complement
+f0
+0f
+04
+fd
+09
+00
+06
+06
+08
+10
+f4
+05
+f5
+02
+02
+0d

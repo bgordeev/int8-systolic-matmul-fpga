@@ -1,0 +1,17 @@
+// A_matrix.hex: 4x4, row-major, 8-bit two's complement
+f7
+04
+10
+10
+f6
+fe
+0a
+0f
+0c
+ff
+f0
+f5
+f7
+02
+f6
+0c
