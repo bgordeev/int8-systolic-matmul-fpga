@@ -99,7 +99,8 @@ def main():
     C = matmul(A, B)
  
     # Overflow sanity check: every C element must fit in the 32-bit accumulator.
-    # Worst case: |A|·|B| ≤ 128·128 per term, so |C[i][j]| ≤ N·16384, which fits in 32 bits for any N.
+    # Worst case: |A|·|B| ≤ 128·128 per term, so |C[i][j]| ≤ N·16384, which fits in 32 bits for any N
+    # below roughly 131,000 - far beyond any size this design targets.
     for row in C:
         for v in row:
             assert -(2**31) <= v < 2**31, "C element overflows INT32 accumulator"
