@@ -27,7 +27,7 @@ Pins used on the board:
 | led_done      | On when a run has completed                                   |
 | led_heartbeat | Approximately 1 Hz blink, confirms the board is clocked       |
 
-The matrix interface stays internal, so the wide 770-bit data flow does not
+The matrix interface stays internal, so the wide 768-bit data flow does not
 have to be routed to real pins.
 
 ## JTAG chain bring-up
@@ -50,17 +50,20 @@ expected product on hardware.
 
 A Signal Tap in-system logic-analyzer capture recorded the internal signals
 `core_start`, `busy`, `core_c_flat`, and `result_pass` during a run. The
-capture shows `core_start` triggering the run, `busy` asserted during
-compute, the result bus settling to the expected product, and `result_pass`
-asserting about 11 cycles after start. This reproduces the simulated
-systolic latency of 11 cycles on the running chip.
+capture shows `core_start` pulsing for one cycle at sample 0, `busy`
+asserted for the eleven compute cycles at samples 1 through 11 (one S_LOAD
+plus ten S_FEED) and deasserting at sample 12 as the result bus settles to
+the expected product, and `result_pass` asserting two cycles later at
+sample 14, once the on-chip comparison stage has registered the match. The
+11-cycle `busy` window reproduces the simulated systolic latency on the
+running chip.
 
 | Metric                          | Result                     | Source                    |
 |---------------------------------|----------------------------|---------------------------|
 | Functional self-test (systolic) | PASS                       | On-board pass indicator   |
 | Functional self-test (sequential) | PASS                     | On-board pass indicator   |
 | Systolic latency on silicon     | 11 cycles                  | Signal Tap capture        |
-| Sequential latency on silicon   | 81 cycles                  | Signal Tap capture        |
+| Sequential latency              | 81 cycles                  | Simulation (tb_matmul_top)|
 | Device on JTAG chain            | 10CX220Y (0x02E120DD)      | Quartus Programmer        |
 
 ## What the hardware demonstration does and does not show
