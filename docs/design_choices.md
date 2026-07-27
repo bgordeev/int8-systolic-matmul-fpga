@@ -51,7 +51,7 @@ Unpacked-array input ports are used freely.
 
 ## Virtual pins for synthesis characterization
 
-Chosen over inventing a fake pinout. The roughly 770-bit matrix interface
+Chosen over inventing a fake pinout. The 768-bit matrix interface
 does not fit on package pins on any real board. Virtual pins let the Fitter
 treat the data ports as internal nets, giving honest area and Fmax numbers
 for the core that will eventually sit behind a memory-mapped bus. This is
@@ -60,7 +60,7 @@ standard practice for compute-core characterization.
 ## A separate hardware wrapper (hw_top.sv)
 
 Chosen over trying to expose the full matrix interface on real pins. Rather
-than route 770 bits of data through real I/O, `hw_top.sv` compiles two fixed
+than route 768 bits of data through real I/O, `hw_top.sv` compiles two fixed
 INT8 test matrices and their known product into the FPGA, exposes only a
 button and a pass LED, and compares the hardware result against the
 expected value on-chip. This is what makes an in-system demonstration
@@ -79,9 +79,8 @@ and would create integration bugs.
 Chosen over unbounded random operands. The Python generator uses a fixed
 seed so results are reproducible, and bounds operand magnitude so
 accumulators are provably inside the 32-bit range during random tests.
-Maximum-magnitude cases are covered separately by directed tests
-(zero, identity, and +/-127), so the random tests exercise coverage
-without racing overflow.
+Directed tests cover zero, identity, and signed cases separately, so the
+random tests exercise coverage without racing overflow.
 
 ## Python golden model, independent verifier
 
@@ -91,7 +90,8 @@ and produces both A, B, and the expected C. A separate script
 (`scripts/verify_results.py`) then re-checks the simulator's output file
 against the model. Independence of the checker from the design being
 checked is what makes the verification meaningful, and it is why the
-report calls the flow "layered" rather than "self-checking."
+accompanying paper calls the flow "layered" rather than merely
+"self-checking."
 
 ## Single hardware demonstration case
 
