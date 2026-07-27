@@ -25,7 +25,7 @@ module tb_systolic_array;
   // Geometry, feed length, and clock timing. T_FEED tracks the 3N-2 schedule.
   localparam int DATA_WIDTH = 8;
   localparam int ACC_WIDTH  = 32;
-  localparam int N          = 4;          // set to 2
+  localparam int N          = 4;          // matrix / array dimension
   localparam int T_FEED     = 3*N - 2;
   localparam int CLK_PERIOD = 10;
 
