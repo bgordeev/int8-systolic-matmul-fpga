@@ -30,7 +30,7 @@ characterized in Quartus.
 
 3. Verification. The flow is simulation-first: unit tests on the raw array
    with testbench-generated skew, integration tests through the top level,
-   directed cases for signed, zero, and extreme values, random vectors, hex
+   directed cases for signed and zero values, identity matrices, random vectors, hex
    vectors from a Python golden model, and an independent Python check on
    the simulator output. The two engines are also cross-checked against each
    other on identical inputs.
