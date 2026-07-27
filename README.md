@@ -5,8 +5,8 @@ matrix-multiply engines (a sequential MAC baseline and an N x N systolic
 array), self-checking testbenches, a Python golden model, a Quartus synthesis
 flow, and a technical report.
 
-Verified simulation results (Icarus Verilog, N = 4, INT8 operands, 32-bit
-accumulators):
+Verified simulation results (Questa Intel FPGA Edition, N = 4, INT8 operands,
+32-bit accumulators; reproducible with Icarus Verilog):
 
 | Engine            | Total cycles | Result                                    |
 |-------------------|--------------|-------------------------------------------|
@@ -49,7 +49,7 @@ document and covers design, verification, synthesis, and hardware validation in
 depth.
 
 ```
-fpga-int8-matmul-accelerator/
+int8-systolic-matmul-fpga/
 |-- README.md
 |-- report/
 |   \-- report.pdf                  technical report
@@ -60,7 +60,8 @@ fpga-int8-matmul-accelerator/
 |   |-- systolic_pe.sv              output-stationary processing element
 |   |-- systolic_array.sv           N x N generate-based PE mesh
 |   |-- matmul_controller.sv        V2: skew generator plus FSM (11 cycles at N = 4)
-|   \-- matmul_top.sv               both engines plus runtime select mux
+|   |-- matmul_top.sv               both engines plus runtime select mux
+|   \-- hw_top.sv                   board wrapper: on-chip self-test, LEDs
 |-- tb/                             self-checking testbenches
 |-- scripts/                        golden model, verifier, quantization demo
 |-- vectors/                        generated hex test vectors
@@ -73,7 +74,7 @@ fpga-int8-matmul-accelerator/
 Requires only Python 3.
 
 ```bash
-cd fpga-int8-matmul-accelerator
+cd int8-systolic-matmul-fpga
 python3 scripts/generate_vectors.py         # defaults: N = 4, |values| <= 16, seed 2026
 # options: python3 scripts/generate_vectors.py --size 4 --max-mag 16 --seed 123
 ```
@@ -98,6 +99,9 @@ iverilog -g2012 -o sim_arr rtl/*.sv tb/tb_systolic_array.sv && vvp sim_arr
 # Top level: both engines on identical inputs, cross-check, and latency
 # measurement (14 tests). Writes vectors/C_hw_out.hex.
 iverilog -g2012 -o sim_top rtl/*.sv tb/tb_matmul_top.sv && vvp sim_top
+
+# Board wrapper: on-chip self-test through both engines (2 checks)
+iverilog -g2012 -o sim_hw rtl/*.sv tb/tb_hw_top.sv && vvp sim_hw
 ```
 
 Each testbench is self-checking and ends with a pass or fail summary, and dumps
@@ -129,9 +133,18 @@ standalone without board-specific pins. Then run a full compile:
 quartus_sh --flow compile int8_matmul
 ```
 
-To compare the two engines, compile twice with the top-level entity set to
-`sequential_matmul` and then to `matmul_controller`. Real pin assignments for a
-physical board must come from the official board schematic or pin table.
+To compare the two engines, use the per-engine project scripts, which set the
+top-level entity and virtual pins for each:
+
+```bash
+quartus_sh -t create_project_sequential.tcl   # top = sequential_matmul
+quartus_sh -t create_project_controller.tcl   # top = matmul_controller
+quartus_sh -t create_project_hw.tcl           # top = hw_top (board demo)
+```
+
+The board demo additionally needs real pin assignments, which must come from the
+official board schematic or pin table; fill them into
+`quartus/hw_top_pins_template.tcl` and source it before compiling.
 
 Post-fit numbers are read from the Compilation Report. Resource usage (ALMs,
 registers, DSP blocks, M20K) appears under Fitter, Resource Section, Resource
