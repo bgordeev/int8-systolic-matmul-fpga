@@ -19,7 +19,7 @@
 //   characterization if the I/O is marked as virtual pins
 //   (create_project.tcl does this), but it is not a deployable pinout. 
 //   Actual pin locations must come from the specific Cyclone 10 GX board pin 
-//   table. See quartus/notes_for_pin_assignments.md.
+//   table. See quartus/hw_top_pins_template.tcl.
 //=============================================================================
 
 module matmul_top #(
