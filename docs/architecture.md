@@ -90,7 +90,10 @@ including the load cycle.
 
 64 MACs in 10 feed cycles is an average of 6.4 MACs per cycle. Peak
 utilization is N^2 = 16 MACs per cycle during the middle of the feed window
-when every PE has valid data on both inputs. 
+when every PE has valid data on both inputs. Measured over the 11-cycle
+end-to-end latency rather than the 10-cycle enabled window, the same 64 MACs
+give 5.82 MACs per cycle, or 36 percent of the 16-MAC peak; the report and
+the paper use that end-to-end basis. 
 
 ## Module hierarchy
 
