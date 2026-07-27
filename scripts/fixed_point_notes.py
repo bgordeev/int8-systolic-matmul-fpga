@@ -14,7 +14,7 @@ EXPLANATION
     the very end with a single multiply by (scale_A * scale_B).
 
 WHY ML ACCELERATORS USE INT8
-    - An INT8 multiplier is ~10-20x smaller and lower-energy than an FP32 one.
+    - An INT8 multiplier is substantially smaller and lower-energy than an FP32 one.
     - 4x less memory traffic than FP32.
     - An 8x8 signed multiply fits comfortably in one Cyclone 10 GX 18x19 DSP block, 
     whereas an FP32 multiply requires floating-point DSP modes.
@@ -41,7 +41,7 @@ def choose_scale(values, num_bits=8):
 
 def quantize(x, scale):
     """
-    real to int8 (with rounding and clamping).
+    real to int8 (rounding, then clamping to the full INT8 range [-128, 127]).
     """
     q = round(x / scale)
     return max(-128, min(127, q))
