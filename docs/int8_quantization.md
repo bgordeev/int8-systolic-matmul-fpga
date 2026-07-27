@@ -25,10 +25,10 @@ software, so the FPGA datapath operates entirely on integers.
 
 | Aspect           | INT8 compared with FP32                                                                     |
 |------------------|---------------------------------------------------------------------------------------------|
-| Multiplier area  | Roughly an order of magnitude smaller and lower energy.                                     |
+| Multiplier area  | Substantially smaller and lower energy.                                                     |
 | Memory traffic   | Four times fewer bytes per value.                                                           |
 | FPGA DSP fit     | An 8x8 signed multiply fits comfortably in a Cyclone 10 GX 18x19 variable-precision DSP block. FP32 requires floating-point DSP modes and more resources. |
-| Accuracy cost    | Typically under one percent for CNNs and transformers when the network is calibrated for low precision.                                             |
+| Accuracy cost    | Small for CNNs and transformers when the network is calibrated for low precision.                                                                   |
 
 ## Accumulator width (ACC_WIDTH = 32 in this project)
 
